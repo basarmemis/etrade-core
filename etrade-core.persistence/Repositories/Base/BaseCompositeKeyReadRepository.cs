@@ -40,6 +40,7 @@ namespace etrade_core.persistence.Repositories.Base
         {
             // This method needs to be implemented by derived classes
             // as the composite key structure is specific to each entity
+            await Task.CompletedTask;
             throw new NotImplementedException("GetByCompositeKeyAsync must be implemented by derived classes");
         }
 
