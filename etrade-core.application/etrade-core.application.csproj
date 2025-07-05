@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\etrade-core.domain\etrade-core.domain.csproj" />
+    <ProjectReference Include="..\etrade-core.persistence\etrade-core.persistence.csproj" />
+    <ProjectReference Include="..\etrade-core.infrastructure\etrade-core.infrastructure.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>etrade_core.application</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

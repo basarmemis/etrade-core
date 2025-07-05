@@ -1,15 +1,11 @@
-using System.ComponentModel.DataAnnotations;
 using etrade_core.domain.Entities.Base;
 
 namespace etrade_core.domain.Entities.Core
 {
-    public class OrderItem : BaseEntityWithCompositeKey
+    public class OrderItem : BaseEntity<long>
     {
-        [Key]
-        public int OrderId { get; set; }
-        
-        [Key]
-        public int ProductId { get; set; }
+        public long OrderId { get; set; }
+        public long ProductId { get; set; }
         
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }

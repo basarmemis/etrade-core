@@ -1,25 +1,32 @@
 using etrade_core.domain.Entities.Core;
+using etrade_core.persistence.Context;
 using etrade_core.persistence.Repositories.Base;
 using etrade_core.persistence.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace etrade_core.persistence.Repositories
 {
-    public class UserProfileRepository : BaseRepository<UserProfile, int, DbContext>, IUserProfileRepository
+    public class UserProfileRepository : BaseRepository<UserProfile, long, DomainDbContext>, IUserProfileRepository
     {
-        public UserProfileRepository(DbContext context) : base(context)
+        public UserProfileRepository(DomainDbContext context) : base(context)
         {
         }
 
-        // Custom methods specific to UserProfile
-        public async Task<UserProfile?> GetByUserIdAsync(int userId)
+        /// <summary>
+        /// Identity User Id'sine göre UserProfile'ı bulur
+        /// </summary>
+        public async Task<UserProfile?> GetByUserIdAsync(long userId)
         {
             return await GetFirstAsync(p => p.UserId == userId);
         }
 
-        public async Task<IEnumerable<UserProfile>> GetByPhoneNumberAsync(string phoneNumber)
+        /// <summary>
+        /// Identity User Id'sine göre UserProfile'ı Orders ile birlikte getirir
+        /// </summary>
+        public async Task<UserProfile?> GetByUserIdWithOrdersAsync(long userId)
         {
-            return await GetAsync(p => p.PhoneNumber == phoneNumber);
+            // Şimdilik basit implementasyon - gelecekte Include ile geliştirilebilir
+            return await GetFirstAsync(p => p.UserId == userId);
         }
     }
 } 

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace etrade_core.persistence.Repositories
 {
-    public class ProductRepository : BaseRepository<Product, int, DbContext>, IProductRepository
+    public class ProductRepository : BaseRepository<Product, long, DbContext>, IProductRepository
     {
         public ProductRepository(DbContext context) : base(context)
         {

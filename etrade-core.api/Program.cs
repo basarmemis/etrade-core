@@ -1,3 +1,12 @@
+using etrade_core.infrastructure.Identity;
+using etrade_core.persistence.Context;
+using etrade_core.persistence.Identity;
+using etrade_core.persistence.Repositories;
+using etrade_core.persistence.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -19,6 +28,39 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+// Database Configuration
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
+
+// Domain DbContext
+builder.Services.AddDbContext<DomainDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
+// Identity DbContext
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(identityConnectionString));
+
+// Identity Services
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 6;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
+
+// Repository Registrations
+builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+
+// Infrastructure Services
+builder.Services.AddScoped<IIdentityUserService, IdentityUserService>();
+
+// Application Services
+// builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
