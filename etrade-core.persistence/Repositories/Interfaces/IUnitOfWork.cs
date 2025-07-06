@@ -1,0 +1,33 @@
+using etrade_core.domain.Entities.Core;
+
+namespace etrade_core.persistence.Repositories.Interfaces
+{
+    /// <summary>
+    /// Unit of Work pattern interface - Transaction yönetimi ve repository koordinasyonu için
+    /// </summary>
+    public interface IUnitOfWork : IDisposable
+    {
+        // Repository properties
+        IUserProfileRepository UserProfiles { get; }
+        IProductRepository Products { get; }
+        IOrderRepository Orders { get; }
+        IOrderItemRepository OrderItems { get; }
+
+        // Transaction management
+        Task BeginTransactionAsync();
+        Task CommitTransactionAsync();
+        Task RollbackTransactionAsync();
+        
+        // Save changes
+        Task<int> SaveChangesAsync();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+        
+        // Transaction execution helpers
+        Task<T> ExecuteInTransactionAsync<T>(Func<Task<T>> operation);
+        Task ExecuteInTransactionAsync(Func<Task> operation);
+        
+        // Transaction state
+        bool HasActiveTransaction { get; }
+        bool IsDisposed { get; }
+    }
+} 
