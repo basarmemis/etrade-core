@@ -1,6 +1,7 @@
 using etrade_core.domain.Entities.Base;
+using etrade_core.domain.UserModule.Entities;
 
-namespace etrade_core.domain.Entities.Core
+namespace etrade_core.domain.OrderModule.Entities
 {
     public class Order : BaseEntity<long>
     {
@@ -15,6 +16,6 @@ namespace etrade_core.domain.Entities.Core
         
         // Navigation properties
         public UserProfile UserProfile { get; set; } = null!;
-        public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+        public ICollection<OrderItem> OrderItems { get; set; } = [];
     }
 } 

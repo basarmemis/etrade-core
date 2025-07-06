@@ -1,5 +1,5 @@
 using etrade_core.application.IRepositories;
-using etrade_core.domain.Entities.Core;
+using etrade_core.domain.UserModule.Entities;
 using etrade_core.persistence.Context;
 using etrade_core.persistence.Repositories.Base;
 using Microsoft.EntityFrameworkCore;

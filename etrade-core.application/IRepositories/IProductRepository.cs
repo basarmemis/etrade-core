@@ -1,4 +1,6 @@
-using etrade_core.domain.Entities.Core;
+
+
+using etrade_core.domain.ProductModule.Entities;
 
 namespace etrade_core.application.IRepositories
 {

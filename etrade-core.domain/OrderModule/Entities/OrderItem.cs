@@ -1,6 +1,7 @@
 using etrade_core.domain.Entities.Base;
+using etrade_core.domain.ProductModule.Entities;
 
-namespace etrade_core.domain.Entities.Core
+namespace etrade_core.domain.OrderModule.Entities
 {
     public class OrderItem : BaseEntity<long>
     {

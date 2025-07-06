@@ -1,5 +1,5 @@
 using etrade_core.application.Services;
-using etrade_core.domain.Entities.Core;
+using etrade_core.domain.OrderModule.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace etrade_core.api.Controllers

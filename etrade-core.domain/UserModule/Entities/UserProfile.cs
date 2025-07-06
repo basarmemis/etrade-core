@@ -1,6 +1,7 @@
 using etrade_core.domain.Entities.Base;
+using etrade_core.domain.OrderModule.Entities;
 
-namespace etrade_core.domain.Entities.Core
+namespace etrade_core.domain.UserModule.Entities
 {
     /// <summary>
     /// ApplicationUser ile domain entity'leri arasında köprü görevi gören entity

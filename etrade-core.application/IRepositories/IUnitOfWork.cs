@@ -1,5 +1,3 @@
-using etrade_core.domain.Entities.Core;
-
 namespace etrade_core.application.IRepositories
 {
     /// <summary>

@@ -1,4 +1,6 @@
-using etrade_core.domain.Entities.Core;
+using etrade_core.domain.OrderModule.Entities;
+using etrade_core.domain.ProductModule.Entities;
+using etrade_core.domain.UserModule.Entities;
 using etrade_core.persistence.Identity;
 using Microsoft.EntityFrameworkCore;
 

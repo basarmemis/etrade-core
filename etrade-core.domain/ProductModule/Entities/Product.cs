@@ -1,6 +1,7 @@
 using etrade_core.domain.Entities.Base;
+using etrade_core.domain.ProductModule.Enums;
 
-namespace etrade_core.domain.Entities.Core
+namespace etrade_core.domain.ProductModule.Entities
 {
     public class Product : BaseEntity<long>
     {
@@ -10,5 +11,6 @@ namespace etrade_core.domain.Entities.Core
         public int StockQuantity { get; set; }
         public string SKU { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;
+        public ProductOfferingTypes OfferingType { get; set; } = ProductOfferingTypes.None;
     }
-} 
+}
