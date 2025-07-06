@@ -1,13 +1,14 @@
 using etrade_core.application.IRepositories;
 using etrade_core.domain.OrderModule.Entities;
 using etrade_core.persistence.Repositories.Base;
+using etrade_core.persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace etrade_core.persistence.Repositories
 {
-    public class OrderItemRepository : BaseCompositeKeyRepository<OrderItem, DbContext>, IOrderItemRepository
+    public class OrderItemRepository : BaseCompositeKeyRepository<OrderItem, DomainDbContext>, IOrderItemRepository
     {
-        public OrderItemRepository(DbContext context) : base(context)
+        public OrderItemRepository(DomainDbContext context) : base(context)
         {
         }
 

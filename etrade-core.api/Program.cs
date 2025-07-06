@@ -3,6 +3,7 @@ using etrade_core.infrastructure.Identity;
 using etrade_core.persistence.Context;
 using etrade_core.persistence.Identity;
 using etrade_core.persistence.Repositories;
+using etrade_core.persistence.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -52,8 +53,8 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-// Repository Registrations
-builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+// Persistence Services
+builder.Services.AddPersistenceServices(connectionString!);
 
 // Infrastructure Services
 builder.Services.AddScoped<IIdentityUserService, IdentityUserService>();

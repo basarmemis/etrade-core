@@ -1,13 +1,14 @@
 using etrade_core.application.IRepositories;
 using etrade_core.domain.ProductModule.Entities;
 using etrade_core.persistence.Repositories.Base;
+using etrade_core.persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace etrade_core.persistence.Repositories
 {
-    public class ProductRepository : BaseRepository<Product, long, DbContext>, IProductRepository
+    public class ProductRepository : BaseRepository<Product, long, DomainDbContext>, IProductRepository
     {
-        public ProductRepository(DbContext context) : base(context)
+        public ProductRepository(DomainDbContext context) : base(context)
         {
         }
 

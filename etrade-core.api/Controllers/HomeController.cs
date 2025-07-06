@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using etrade_core.persistence.Context;
+using etrade_core.persistence.data;
 
 namespace e_trade_core.api.Controllers
 {
@@ -9,6 +11,13 @@ namespace e_trade_core.api.Controllers
     [Route("[controller]")]
     public class HomeController : ControllerBase
     {
+        private readonly DomainDbContext _context;
+
+        public HomeController(DomainDbContext context)
+        {
+            _context = context;
+        }
+
         /// <summary>
         /// API'nin çalışıp çalışmadığını kontrol eder
         /// </summary>
@@ -19,6 +28,26 @@ namespace e_trade_core.api.Controllers
         public IActionResult Index()
         {
             return Ok("E-Trade Core API çalışıyor.");
+        }
+
+        /// <summary>
+        /// Test verilerini veritabanına ekler
+        /// </summary>
+        /// <returns>Seed işlemi sonucu</returns>
+        /// <response code="200">Seed işlemi başarılı</response>
+        [HttpPost("seed")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> SeedData1()
+        {
+            try
+            {
+                await SeedData.SeedAsync(_context);
+                return Ok("Test verileri başarıyla eklendi.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Seed işlemi başarısız: {ex.Message}");
+            }
         }
     }
 }

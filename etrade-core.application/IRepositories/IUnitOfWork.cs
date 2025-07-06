@@ -10,6 +10,12 @@ namespace etrade_core.application.IRepositories
         IProductRepository Products { get; }
         IOrderRepository Orders { get; }
         IOrderItemRepository OrderItems { get; }
+        
+        // Generic Product System Repository Properties
+        ICategoryRepository Categories { get; }
+        IProductAttributeRepository ProductAttributes { get; }
+        IProductTemplateRepository ProductTemplates { get; }
+        IProductImageRepository ProductImages { get; }
 
         // Transaction management
         Task BeginTransactionAsync();

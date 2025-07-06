@@ -18,6 +18,12 @@ namespace etrade_core.persistence.Repositories
         private IProductRepository? _productRepository;
         private IOrderRepository? _orderRepository;
         private IOrderItemRepository? _orderItemRepository;
+        
+        // Generic Product System Repositories
+        private ICategoryRepository? _categoryRepository;
+        private IProductAttributeRepository? _productAttributeRepository;
+        private IProductTemplateRepository? _productTemplateRepository;
+        private IProductImageRepository? _productImageRepository;
 
         public UnitOfWork(DomainDbContext context)
         {
@@ -36,6 +42,19 @@ namespace etrade_core.persistence.Repositories
 
         public IOrderItemRepository OrderItems => 
             _orderItemRepository ??= new OrderItemRepository(_context);
+
+        // Generic Product System Repository Properties
+        public ICategoryRepository Categories => 
+            _categoryRepository ??= new CategoryRepository(_context);
+
+        public IProductAttributeRepository ProductAttributes => 
+            _productAttributeRepository ??= new ProductAttributeRepository(_context);
+
+        public IProductTemplateRepository ProductTemplates => 
+            _productTemplateRepository ??= new ProductTemplateRepository(_context);
+
+        public IProductImageRepository ProductImages => 
+            _productImageRepository ??= new ProductImageRepository(_context);
 
         // Transaction state
         public bool HasActiveTransaction => _currentTransaction != null;
