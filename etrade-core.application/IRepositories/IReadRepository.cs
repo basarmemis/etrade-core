@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using etrade_core.domain.Entities.Base;
 
-namespace etrade_core.persistence.Repositories.Interfaces
+namespace etrade_core.application.IRepositories
 {
     public interface IReadRepository<TEntity, TKey> 
         where TEntity : class, ISoftDeletableEntity

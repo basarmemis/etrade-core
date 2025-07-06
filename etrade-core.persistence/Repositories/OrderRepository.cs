@@ -1,7 +1,7 @@
+using etrade_core.application.IRepositories;
 using etrade_core.domain.Entities.Core;
 using etrade_core.persistence.Context;
 using etrade_core.persistence.Repositories.Base;
-using etrade_core.persistence.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace etrade_core.persistence.Repositories

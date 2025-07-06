@@ -1,9 +1,10 @@
 using etrade_core.domain.Entities.Base;
 
-namespace etrade_core.persistence.Repositories.Interfaces
+namespace etrade_core.application.IRepositories
 {
-    public interface ICompositeKeyWriteRepository<TEntity> 
+    public interface IWriteRepository<TEntity, TKey> 
         where TEntity : class, ISoftDeletableEntity
+        where TKey : IEquatable<TKey>
     {
         // Add operations
         Task<TEntity> AddAsync(TEntity entity);
@@ -15,20 +16,20 @@ namespace etrade_core.persistence.Repositories.Interfaces
         
         // Delete operations
         void Delete(TEntity entity);
-        void Delete(object[] keys);
+        void Delete(TKey id);
         void DeleteRange(IEnumerable<TEntity> entities);
-        void DeleteRange(IEnumerable<object[]> keys);
+        void DeleteRange(IEnumerable<TKey> ids);
         
         // Soft delete operations
         void SoftDelete(TEntity entity);
-        void SoftDelete(object[] keys);
+        void SoftDelete(TKey id);
         void SoftDeleteRange(IEnumerable<TEntity> entities);
-        void SoftDeleteRange(IEnumerable<object[]> keys);
+        void SoftDeleteRange(IEnumerable<TKey> ids);
         
         // Hard delete operations (permanent)
         void HardDelete(TEntity entity);
-        void HardDelete(object[] keys);
+        void HardDelete(TKey id);
         void HardDeleteRange(IEnumerable<TEntity> entities);
-        void HardDeleteRange(IEnumerable<object[]> keys);
+        void HardDeleteRange(IEnumerable<TKey> ids);
     }
 } 

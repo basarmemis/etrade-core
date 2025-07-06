@@ -1,6 +1,6 @@
 using etrade_core.domain.Entities.Core;
 
-namespace etrade_core.persistence.Repositories.Interfaces
+namespace etrade_core.application.IRepositories
 {
     /// <summary>
     /// Order entity için repository interface

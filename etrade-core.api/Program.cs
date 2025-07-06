@@ -1,11 +1,10 @@
+using etrade_core.application.IRepositories;
 using etrade_core.infrastructure.Identity;
 using etrade_core.persistence.Context;
 using etrade_core.persistence.Identity;
 using etrade_core.persistence.Repositories;
-using etrade_core.persistence.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 var builder = WebApplication.CreateBuilder(args);
 

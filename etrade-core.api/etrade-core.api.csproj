@@ -19,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\etrade-core.domain\etrade-core.domain.csproj" />
-    <ProjectReference Include="..\etrade-core.application\etrade-core.application.csproj" />
+    <ProjectReference Include="..\etrade-core.persistence\etrade-core.persistence.csproj" />
+    <ProjectReference Include="..\etrade-core.infrastructure\etrade-core.infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

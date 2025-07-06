@@ -1,6 +1,6 @@
+using etrade_core.application.IRepositories;
 using etrade_core.persistence.Context;
 using etrade_core.persistence.Repositories;
-using etrade_core.persistence.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

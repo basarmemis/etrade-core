@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using etrade_core.domain.Entities.Base;
 
-namespace etrade_core.persistence.Repositories.Interfaces
+namespace etrade_core.application.IRepositories
 {
     public interface ICompositeKeyReadRepository<TEntity> 
         where TEntity : class, ISoftDeletableEntity
@@ -39,4 +39,4 @@ namespace etrade_core.persistence.Repositories.Interfaces
         Task<bool> ExistsAsync(object[] keys);
         Task<bool> ExistsAsync(object[] keys, bool includeDeleted);
     }
-} 
+}

@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\etrade-core.domain\etrade-core.domain.csproj" />
     <ProjectReference Include="..\etrade-core.persistence\etrade-core.persistence.csproj" />
   </ItemGroup>
 

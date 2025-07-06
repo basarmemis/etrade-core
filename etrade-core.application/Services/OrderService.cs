@@ -1,5 +1,5 @@
+using etrade_core.application.IRepositories;
 using etrade_core.domain.Entities.Core;
-using etrade_core.persistence.Repositories.Interfaces;
 
 namespace etrade_core.application.Services
 {

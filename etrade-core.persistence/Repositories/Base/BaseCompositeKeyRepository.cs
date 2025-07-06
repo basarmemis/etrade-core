@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
+using etrade_core.application.IRepositories;
 using etrade_core.domain.Entities.Base;
-using etrade_core.persistence.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace etrade_core.persistence.Repositories.Base
