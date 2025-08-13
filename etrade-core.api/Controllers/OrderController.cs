@@ -1,5 +1,6 @@
 using etrade_core.application.Services;
 using etrade_core.domain.OrderModule.Entities;
+using etrade_core.domain.OrderModule.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace etrade_core.api.Controllers
@@ -26,7 +27,7 @@ namespace etrade_core.api.Controllers
                 var order = new Order
                 {
                     UserProfileId = request.UserProfileId,
-                    Status = "Pending",
+                    Status = OrderStatus.Pending,
                     TotalAmount = request.OrderItems.Sum(item => item.Quantity * item.UnitPrice)
                 };
 
@@ -135,6 +136,6 @@ namespace etrade_core.api.Controllers
 
     public class UpdateOrderStatusRequest
     {
-        public string Status { get; set; } = string.Empty;
+        public OrderStatus Status { get; set; }
     }
 } 

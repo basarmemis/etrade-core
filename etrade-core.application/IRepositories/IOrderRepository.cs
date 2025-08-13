@@ -1,4 +1,5 @@
 using etrade_core.domain.OrderModule.Entities;
+using etrade_core.domain.OrderModule.Enums;
 
 namespace etrade_core.application.IRepositories
 {
@@ -20,6 +21,6 @@ namespace etrade_core.application.IRepositories
         /// <summary>
         /// Sipariş durumuna göre siparişleri getirir
         /// </summary>
-        Task<IEnumerable<Order>> GetOrdersByStatusAsync(string status);
+        Task<IEnumerable<Order>> GetOrdersByStatusAsync(OrderStatus status);
     }
 } 

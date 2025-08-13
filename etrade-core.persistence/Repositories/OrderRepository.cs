@@ -1,5 +1,6 @@
 using etrade_core.application.IRepositories;
 using etrade_core.domain.OrderModule.Entities;
+using etrade_core.domain.OrderModule.Enums;
 using etrade_core.persistence.Context;
 using etrade_core.persistence.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
@@ -45,7 +46,7 @@ namespace etrade_core.persistence.Repositories
         /// <summary>
         /// Sipariş durumuna göre siparişleri getirir
         /// </summary>
-        public async Task<IEnumerable<Order>> GetOrdersByStatusAsync(string status)
+        public async Task<IEnumerable<Order>> GetOrdersByStatusAsync(OrderStatus status)
         {
             return await GetQueryable()
                 .Include(o => o.OrderItems)

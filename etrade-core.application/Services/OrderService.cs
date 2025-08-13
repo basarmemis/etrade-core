@@ -1,5 +1,6 @@
 using etrade_core.application.IRepositories;
 using etrade_core.domain.OrderModule.Entities;
+using etrade_core.domain.OrderModule.Enums;
 
 namespace etrade_core.application.Services
 {
@@ -39,7 +40,7 @@ namespace etrade_core.application.Services
         /// <summary>
         /// Sipariş durumunu günceller (transaction ile)
         /// </summary>
-        public async Task UpdateOrderStatusAsync(long orderId, string newStatus)
+        public async Task UpdateOrderStatusAsync(long orderId, OrderStatus newStatus)
         {
             await _unitOfWork.ExecuteInTransactionAsync(async () =>
             {
@@ -68,7 +69,7 @@ namespace etrade_core.application.Services
                 }
 
                 // Siparişi iptal et
-                order.Status = "Cancelled";
+                order.Status = OrderStatus.Cancelled;
                 _unitOfWork.Orders.Update(order);
 
                 // Sipariş kalemlerini de iptal et

@@ -71,6 +71,12 @@ namespace etrade_core.persistence.Context
                 entity.ToTable("Orders");
                 entity.HasKey(e => e.Id);
                 
+                // Status property - int olarak saklanacak
+                entity.Property(e => e.Status).HasConversion<int>();
+                
+                // OfferingTypes property - Flags enum için
+                entity.Property(e => e.OfferingTypes).HasConversion<int>();
+                
                 // Relationship with UserProfile (köprü entity)
                 entity.HasOne(e => e.UserProfile)
                       .WithMany(p => p.Orders)
@@ -91,6 +97,9 @@ namespace etrade_core.persistence.Context
             {
                 entity.ToTable("OrderItems");
                 entity.HasKey(e => e.Id);
+                
+                // OfferingType property - Flags enum için
+                entity.Property(e => e.OfferingType).HasConversion<int>();
                 
                 // Relationships
                 entity.HasOne(e => e.Order)
@@ -260,6 +269,27 @@ namespace etrade_core.persistence.Context
                 
                 // Index for better performance
                 entity.HasIndex(e => new { e.ProductTemplateId, e.AttributeKey }).IsUnique();
+                
+                // Audit fields
+                entity.Property(e => e.CreatedDate).IsRequired();
+                entity.Property(e => e.UpdatedDate);
+                entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+                
+                // Soft delete filter
+                entity.HasQueryFilter(e => !e.IsDeleted);
+            });
+
+            // OrderItemAttribute entity configuration
+            builder.Entity<OrderItemAttribute>(entity =>
+            {
+                entity.ToTable("OrderItemAttributes");
+                entity.HasKey(e => e.Id);
+                
+                // Relationship with OrderItem
+                entity.HasOne(e => e.OrderItem)
+                      .WithMany(oi => oi.Attributes)
+                      .HasForeignKey(e => e.OrderItemId)
+                      .OnDelete(DeleteBehavior.Cascade);
                 
                 // Audit fields
                 entity.Property(e => e.CreatedDate).IsRequired();
