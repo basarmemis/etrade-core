@@ -6,6 +6,12 @@ using etrade_core.persistence.Repositories;
 using etrade_core.persistence.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MediatR;
+using etrade_core.application.Common.Behaviors;
+
+using FluentValidation;
+using etrade_core.application.OrderModule.Commands.CreateOrder;
+using etrade_core.application.OrderModule.Queries.GetOrder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +64,21 @@ builder.Services.AddPersistenceServices(connectionString!);
 
 // Infrastructure Services
 builder.Services.AddScoped<IIdentityUserService, IdentityUserService>();
+
+// MediatR Configuration
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateOrderCommand).Assembly));
+
+// Pipeline Behaviors
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(IdempotencyBehavior<,>));
+
+// FluentValidation
+builder.Services.AddValidatorsFromAssembly(typeof(CreateOrderCommandValidator).Assembly);
+
+// Distributed Cache for Idempotency
+builder.Services.AddDistributedMemoryCache();
 
 // Application Services
 // builder.Services.AddScoped<IUserService, UserService>();
