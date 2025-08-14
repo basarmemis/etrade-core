@@ -3,6 +3,7 @@ using etrade_core.persistence.Context;
 using etrade_core.persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Data;
 
 namespace etrade_core.persistence.Extensions
 {
@@ -19,7 +20,7 @@ namespace etrade_core.persistence.Extensions
             // Note: DbContext registration is handled in Program.cs to avoid conflicts
             // This method only registers repositories and unit of work
 
-            // Repository registrations
+            // EF Core Repository registrations
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
@@ -31,8 +32,12 @@ namespace etrade_core.persistence.Extensions
             services.AddScoped<IProductTemplateRepository, ProductTemplateRepository>();
             services.AddScoped<IProductImageRepository, ProductImageRepository>();
 
-            // Unit of Work registration
+            // EF Core Unit of Work registration
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // Dapper services registration
+            services.AddSingleton<IDbConnectionFactory>(new DbConnectionFactory(connectionString));
+            services.AddScoped<IDapperUnitOfWork, DapperUnitOfWork>();
 
             return services;
         }
