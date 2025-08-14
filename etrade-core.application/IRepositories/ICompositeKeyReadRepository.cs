@@ -8,7 +8,7 @@ namespace etrade_core.application.IRepositories
     {
         // Get by composite key
         Task<TEntity?> GetByCompositeKeyAsync(object[] keys);
-        Task<TEntity?> GetByCompositeKeyAsync(object[] keys, bool includeDeleted = false);
+        Task<TEntity?> GetByCompositeKeyAsync(object[] keys, bool includeDeleted );
         
         // Get all
         Task<IEnumerable<TEntity>> GetAllAsync();

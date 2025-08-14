@@ -1,4 +1,5 @@
 using etrade_core.application.IRepositories;
+using etrade_core.application.IServices.cs;
 using etrade_core.domain.OrderModule.Entities;
 using etrade_core.domain.OrderModule.Enums;
 
@@ -7,7 +8,7 @@ namespace etrade_core.application.Services
     /// <summary>
     /// Order işlemleri için service - Unit of Work pattern kullanır
     /// </summary>
-    public class OrderService
+    public class OrderService : IOrderService
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -25,7 +26,7 @@ namespace etrade_core.application.Services
             {
                 // Siparişi kaydet
                 await _unitOfWork.Orders.AddAsync(order);
-                
+
                 // Sipariş kalemlerini kaydet
                 foreach (var item in orderItems)
                 {
@@ -62,11 +63,7 @@ namespace etrade_core.application.Services
         {
             await _unitOfWork.ExecuteInTransactionAsync(async () =>
             {
-                var order = await _unitOfWork.Orders.GetByIdAsync(orderId);
-                if (order == null)
-                {
-                    throw new ArgumentException($"Order with ID {orderId} not found.");
-                }
+                var order = await _unitOfWork.Orders.GetByIdAsync(orderId) ?? throw new ArgumentException($"Order with ID {orderId} not found.");
 
                 // Siparişi iptal et
                 order.Status = OrderStatus.Cancelled;
@@ -101,7 +98,7 @@ namespace etrade_core.application.Services
 
                 // Siparişi kaydet
                 await _unitOfWork.Orders.AddAsync(order);
-                
+
                 // Sipariş kalemlerini kaydet
                 foreach (var item in orderItems)
                 {
@@ -125,4 +122,4 @@ namespace etrade_core.application.Services
             }
         }
     }
-} 
+}
