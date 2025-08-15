@@ -12,6 +12,9 @@ using etrade_core.application.Common.Behaviors;
 using FluentValidation;
 using etrade_core.application.OrderModule.Commands.CreateOrder;
 using etrade_core.application.OrderModule.Queries.GetOrder;
+using Sample.Messages;
+using System.Reflection;
+using Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,13 +86,39 @@ builder.Services.AddDistributedMemoryCache();
 // Application Services
 // builder.Services.AddScoped<IUserService, UserService>();
 
+
+
+builder.Services.AddRabbitMqMessaging(
+    scanAssemblies: new[] { Assembly.GetExecutingAssembly(), Assembly.GetAssembly(typeof(MessagingOptions))! },
+    configure: opt =>
+    {
+        opt.Host = "localhost";
+        opt.Username = "guest";
+        opt.Password = "guest";
+        opt.UseDelayedMessageScheduler = true;
+        opt.UseQuorumQueues = true;          // opsiyonel
+        opt.EnablePriority = false;          // opsiyonel
+        opt.PrefetchCount = 64;
+        opt.RetryAttempts = 5;
+        opt.RedeliveryIntervals = new[]
+        {
+            TimeSpan.FromSeconds(15),
+            TimeSpan.FromSeconds(45),
+            TimeSpan.FromMinutes(2)
+        };
+        opt.EnableIdempotency = true;
+        opt.IdempotencyWindow = TimeSpan.FromMinutes(10);
+    });
+
+builder.Services.AddScoped<OrderCreatedMessageSender>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    
+
     // Enable Swagger UI
     app.UseSwagger();
     app.UseSwaggerUI(c =>
