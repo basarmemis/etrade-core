@@ -55,7 +55,7 @@ namespace etrade_core.persistence.Repositories
         public IDapperRepository<ProductImage, long> ProductImages => _productImages.Value;
 
         // Transaction Management
-        public async Task<IDbTransaction> BeginTransactionAsync()
+        public Task<IDbTransaction> BeginTransactionAsync()
         {
             if (_currentTransaction != null)
                 throw new InvalidOperationException("Transaction already exists");
@@ -63,7 +63,7 @@ namespace etrade_core.persistence.Repositories
             var connection = _connectionFactory.CreateConnection();
             connection.Open();
             _currentTransaction = connection.BeginTransaction();
-            return _currentTransaction;
+            return Task.FromResult(_currentTransaction);
         }
 
         public Task CommitTransactionAsync()

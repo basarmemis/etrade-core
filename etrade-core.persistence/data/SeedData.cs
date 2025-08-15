@@ -133,7 +133,7 @@ namespace etrade_core.persistence.data
             return templates;
         }
 
-        private static async Task CreateProductsAsync(
+        private static Task CreateProductsAsync(
             DomainDbContext context, 
             Dictionary<string, Category> categories, 
             Dictionary<string, ProductTemplate> templates)
@@ -225,6 +225,7 @@ namespace etrade_core.persistence.data
             };
 
             context.Products.AddRange(villa, boat, glasses);
+            return Task.CompletedTask;
         }
     }
 } 

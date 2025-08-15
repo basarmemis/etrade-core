@@ -21,12 +21,22 @@ namespace etrade_core.domain.Entities.Base
         bool IsDeleted { get; set; }
     }
 
-    // Generic BaseEntity for different ID types
-    public abstract class BaseEntity<TKey> : IEntity<TKey>, IAuditableEntity, ISoftDeletableEntity
+    // Multi-tenant interface
+    public interface ITenantEntity
+    {
+        string TenantId { get; set; }
+    }
+
+    // Generic BaseEntity for different ID types with tenant support
+    public abstract class BaseEntity<TKey> : IEntity<TKey>, IAuditableEntity, ISoftDeletableEntity, ITenantEntity
         where TKey : IEquatable<TKey>
     {
         [Key]
         public TKey Id { get; set; } = default!;
+
+        [Required]
+        [MaxLength(50)]
+        public string TenantId { get; set; } = string.Empty;
 
         public DateTime CreatedDate { get; set; }
 
@@ -46,11 +56,15 @@ namespace etrade_core.domain.Entities.Base
     }
 
     // BaseEntity without audit for one-to-one relationships
-    public abstract class BaseEntityWithoutAudit<TKey> : IEntity<TKey>, ISoftDeletableEntity
+    public abstract class BaseEntityWithoutAudit<TKey> : IEntity<TKey>, ISoftDeletableEntity, ITenantEntity
         where TKey : IEquatable<TKey>
     {
         [Key]
         public TKey Id { get; set; } = default!;
+
+        [Required]
+        [MaxLength(50)]
+        public string TenantId { get; set; } = string.Empty;
 
         public bool IsDeleted { get; set; } = false;
     }
@@ -61,8 +75,12 @@ namespace etrade_core.domain.Entities.Base
     }
 
     // BaseEntity for composite keys with audit
-    public abstract class BaseEntityWithCompositeKey : IAuditableEntity, ISoftDeletableEntity
+    public abstract class BaseEntityWithCompositeKey : IAuditableEntity, ISoftDeletableEntity, ITenantEntity
     {
+        [Required]
+        [MaxLength(50)]
+        public string TenantId { get; set; } = string.Empty;
+
         public DateTime CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
@@ -76,8 +94,12 @@ namespace etrade_core.domain.Entities.Base
     }
 
     // BaseEntity for composite keys without audit
-    public abstract class BaseEntityWithCompositeKeyWithoutAudit : ISoftDeletableEntity
+    public abstract class BaseEntityWithCompositeKeyWithoutAudit : ISoftDeletableEntity, ITenantEntity
     {
+        [Required]
+        [MaxLength(50)]
+        public string TenantId { get; set; } = string.Empty;
+
         public bool IsDeleted { get; set; } = false;
     }
 }

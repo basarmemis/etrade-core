@@ -1,6 +1,7 @@
 using System.Data;
 using etrade_core.application.IRepositories;
 using etrade_core.persistence.Context;
+using etrade_core.application.Common.Base;
 
 namespace etrade_core.persistence.Repositories.Base
 {
@@ -15,10 +16,10 @@ namespace etrade_core.persistence.Repositories.Base
         private readonly BaseDapperReadRepository<TEntity, TKey> _readRepository;
         private readonly BaseDapperWriteRepository<TEntity, TKey> _writeRepository;
 
-        protected BaseDapperRepository(IDbConnectionFactory connectionFactory)
+        protected BaseDapperRepository(IDbConnectionFactory connectionFactory, ITenantResolver? tenantResolver = null)
         {
-            _readRepository = new DapperReadRepositoryImpl<TEntity, TKey>(connectionFactory);
-            _writeRepository = new DapperWriteRepositoryImpl<TEntity, TKey>(connectionFactory);
+            _readRepository = new DapperReadRepositoryImpl<TEntity, TKey>(connectionFactory, tenantResolver);
+            _writeRepository = new DapperWriteRepositoryImpl<TEntity, TKey>(connectionFactory, tenantResolver);
         }
 
         // IDapperReadRepository implementation
@@ -61,14 +62,14 @@ namespace etrade_core.persistence.Repositories.Base
             where TEntityImpl : class
             where TKeyImpl : IEquatable<TKeyImpl>
         {
-            public DapperReadRepositoryImpl(IDbConnectionFactory connectionFactory) : base(connectionFactory) { }
+            public DapperReadRepositoryImpl(IDbConnectionFactory connectionFactory, ITenantResolver? tenantResolver) : base(connectionFactory, tenantResolver) { }
         }
 
         private sealed class DapperWriteRepositoryImpl<TEntityImpl, TKeyImpl> : BaseDapperWriteRepository<TEntityImpl, TKeyImpl>
             where TEntityImpl : class
             where TKeyImpl : IEquatable<TKeyImpl>
         {
-            public DapperWriteRepositoryImpl(IDbConnectionFactory connectionFactory) : base(connectionFactory) { }
+            public DapperWriteRepositoryImpl(IDbConnectionFactory connectionFactory, ITenantResolver? tenantResolver) : base(connectionFactory, tenantResolver) { }
         }
     }
 } 

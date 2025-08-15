@@ -2,7 +2,10 @@ using etrade_core.domain.OrderModule.Entities;
 using etrade_core.domain.ProductModule.Entities;
 using etrade_core.domain.UserModule.Entities;
 using etrade_core.domain.CategoryModule.Entities;
+using etrade_core.domain.TenantModule.Entities;
 using etrade_core.persistence.Identity;
+using etrade_core.application.Common.Base;
+using etrade_core.domain.Entities.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace etrade_core.persistence.Context
@@ -13,8 +16,15 @@ namespace etrade_core.persistence.Context
     /// </summary>
     public class DomainDbContext : DbContext
     {
+        private readonly ITenantResolver? _tenantResolver;
+
         public DomainDbContext(DbContextOptions<DomainDbContext> options) : base(options)
         {
+        }
+
+        public DomainDbContext(DbContextOptions<DomainDbContext> options, ITenantResolver? tenantResolver) : base(options)
+        {
+            _tenantResolver = tenantResolver;
         }
 
         // Business logic entity'leri
@@ -31,9 +41,30 @@ namespace etrade_core.persistence.Context
         public DbSet<ProductTemplate> ProductTemplates { get; set; }
         public DbSet<ProductTemplateAttribute> ProductTemplateAttributes { get; set; }
 
+        // Tenant entity
+        public DbSet<Tenant> Tenants { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            // Tenant entity configuration
+            builder.Entity<Tenant>(entity =>
+            {
+                entity.ToTable("Tenants");
+                entity.HasKey(e => e.Id);
+                
+                // Unique constraint on TenantId
+                entity.HasIndex(e => e.TenantId).IsUnique();
+                
+                // Audit fields
+                entity.Property(e => e.CreatedDate).IsRequired();
+                entity.Property(e => e.UpdatedDate);
+                entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+                
+                // Soft delete filter
+                entity.HasQueryFilter(e => !e.IsDeleted);
+            });
 
             // UserProfile entity configuration
             builder.Entity<UserProfile>(entity =>
@@ -43,6 +74,9 @@ namespace etrade_core.persistence.Context
                 
                 // Id property'sini long olarak tanımla
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                
+                // TenantId property
+                entity.Property(e => e.TenantId).IsRequired().HasMaxLength(50);
                 
                 // One-to-one relationship with Identity User (sadece Id referansı)
                 entity.HasOne<ApplicationUser>()
@@ -63,6 +97,9 @@ namespace etrade_core.persistence.Context
                 
                 // Soft delete filter
                 entity.HasQueryFilter(e => !e.IsDeleted);
+                
+                // Tenant filter
+                entity.HasQueryFilter(e => e.TenantId == GetCurrentTenantId());
             });
 
             // Order entity configuration
@@ -70,6 +107,9 @@ namespace etrade_core.persistence.Context
             {
                 entity.ToTable("Orders");
                 entity.HasKey(e => e.Id);
+                
+                // TenantId property
+                entity.Property(e => e.TenantId).IsRequired().HasMaxLength(50);
                 
                 // Status property - int olarak saklanacak
                 entity.Property(e => e.Status).HasConversion<int>();
@@ -90,6 +130,9 @@ namespace etrade_core.persistence.Context
                 
                 // Soft delete filter
                 entity.HasQueryFilter(e => !e.IsDeleted);
+                
+                // Tenant filter
+                entity.HasQueryFilter(e => e.TenantId == GetCurrentTenantId());
             });
 
             // OrderItem entity configuration
@@ -97,6 +140,9 @@ namespace etrade_core.persistence.Context
             {
                 entity.ToTable("OrderItems");
                 entity.HasKey(e => e.Id);
+                
+                // TenantId property
+                entity.Property(e => e.TenantId).IsRequired().HasMaxLength(50);
                 
                 // OfferingType property - Flags enum için
                 entity.Property(e => e.OfferingType).HasConversion<int>();
@@ -119,6 +165,9 @@ namespace etrade_core.persistence.Context
                 
                 // Soft delete filter
                 entity.HasQueryFilter(e => !e.IsDeleted);
+                
+                // Tenant filter
+                entity.HasQueryFilter(e => e.TenantId == GetCurrentTenantId());
             });
 
             // Category entity configuration
@@ -126,6 +175,9 @@ namespace etrade_core.persistence.Context
             {
                 entity.ToTable("Categories");
                 entity.HasKey(e => e.Id);
+                
+                // TenantId property
+                entity.Property(e => e.TenantId).IsRequired().HasMaxLength(50);
                 
                 // Self-referencing relationship for hierarchical categories
                 entity.HasOne(e => e.ParentCategory)
@@ -140,6 +192,9 @@ namespace etrade_core.persistence.Context
                 
                 // Soft delete filter
                 entity.HasQueryFilter(e => !e.IsDeleted);
+                
+                // Tenant filter
+                entity.HasQueryFilter(e => e.TenantId == GetCurrentTenantId());
             });
 
             // Product entity configuration (updated)
@@ -147,6 +202,9 @@ namespace etrade_core.persistence.Context
             {
                 entity.ToTable("Products");
                 entity.HasKey(e => e.Id);
+                
+                // TenantId property
+                entity.Property(e => e.TenantId).IsRequired().HasMaxLength(50);
                 
                 // Relationships
                 entity.HasOne(e => e.Category)
@@ -166,6 +224,9 @@ namespace etrade_core.persistence.Context
                 
                 // Soft delete filter
                 entity.HasQueryFilter(e => !e.IsDeleted);
+                
+                // Tenant filter
+                entity.HasQueryFilter(e => e.TenantId == GetCurrentTenantId());
             });
 
             // ProductAttribute entity configuration
@@ -173,6 +234,9 @@ namespace etrade_core.persistence.Context
             {
                 entity.ToTable("ProductAttributes");
                 entity.HasKey(e => e.Id);
+                
+                // TenantId property
+                entity.Property(e => e.TenantId).IsRequired().HasMaxLength(50);
                 
                 // Relationship with Product
                 entity.HasOne(e => e.Product)
@@ -190,6 +254,9 @@ namespace etrade_core.persistence.Context
                 
                 // Soft delete filter
                 entity.HasQueryFilter(e => !e.IsDeleted);
+                
+                // Tenant filter
+                entity.HasQueryFilter(e => e.TenantId == GetCurrentTenantId());
             });
 
             // ProductImage entity configuration
@@ -197,6 +264,9 @@ namespace etrade_core.persistence.Context
             {
                 entity.ToTable("ProductImages");
                 entity.HasKey(e => e.Id);
+                
+                // TenantId property
+                entity.Property(e => e.TenantId).IsRequired().HasMaxLength(50);
                 
                 // Relationship with Product
                 entity.HasOne(e => e.Product)
@@ -211,6 +281,9 @@ namespace etrade_core.persistence.Context
                 
                 // Soft delete filter
                 entity.HasQueryFilter(e => !e.IsDeleted);
+                
+                // Tenant filter
+                entity.HasQueryFilter(e => e.TenantId == GetCurrentTenantId());
             });
 
             // ProductPriceHistory entity configuration
@@ -218,6 +291,9 @@ namespace etrade_core.persistence.Context
             {
                 entity.ToTable("ProductPriceHistories");
                 entity.HasKey(e => e.Id);
+                
+                // TenantId property
+                entity.Property(e => e.TenantId).IsRequired().HasMaxLength(50);
                 
                 // Relationship with Product
                 entity.HasOne(e => e.Product)
@@ -232,6 +308,9 @@ namespace etrade_core.persistence.Context
                 
                 // Soft delete filter
                 entity.HasQueryFilter(e => !e.IsDeleted);
+                
+                // Tenant filter
+                entity.HasQueryFilter(e => e.TenantId == GetCurrentTenantId());
             });
 
             // ProductTemplate entity configuration
@@ -239,6 +318,9 @@ namespace etrade_core.persistence.Context
             {
                 entity.ToTable("ProductTemplates");
                 entity.HasKey(e => e.Id);
+                
+                // TenantId property
+                entity.Property(e => e.TenantId).IsRequired().HasMaxLength(50);
                 
                 // Relationship with Category
                 entity.HasOne(e => e.Category)
@@ -253,6 +335,9 @@ namespace etrade_core.persistence.Context
                 
                 // Soft delete filter
                 entity.HasQueryFilter(e => !e.IsDeleted);
+                
+                // Tenant filter
+                entity.HasQueryFilter(e => e.TenantId == GetCurrentTenantId());
             });
 
             // ProductTemplateAttribute entity configuration
@@ -260,6 +345,9 @@ namespace etrade_core.persistence.Context
             {
                 entity.ToTable("ProductTemplateAttributes");
                 entity.HasKey(e => e.Id);
+                
+                // TenantId property
+                entity.Property(e => e.TenantId).IsRequired().HasMaxLength(50);
                 
                 // Relationship with ProductTemplate
                 entity.HasOne(e => e.ProductTemplate)
@@ -277,6 +365,9 @@ namespace etrade_core.persistence.Context
                 
                 // Soft delete filter
                 entity.HasQueryFilter(e => !e.IsDeleted);
+                
+                // Tenant filter
+                entity.HasQueryFilter(e => e.TenantId == GetCurrentTenantId());
             });
 
             // OrderItemAttribute entity configuration
@@ -284,6 +375,9 @@ namespace etrade_core.persistence.Context
             {
                 entity.ToTable("OrderItemAttributes");
                 entity.HasKey(e => e.Id);
+                
+                // TenantId property
+                entity.Property(e => e.TenantId).IsRequired().HasMaxLength(50);
                 
                 // Relationship with OrderItem
                 entity.HasOne(e => e.OrderItem)
@@ -298,7 +392,69 @@ namespace etrade_core.persistence.Context
                 
                 // Soft delete filter
                 entity.HasQueryFilter(e => !e.IsDeleted);
+                
+                // Tenant filter
+                entity.HasQueryFilter(e => e.TenantId == GetCurrentTenantId());
             });
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
+
+        public override int SaveChanges()
+        {
+            SetTenantIdOnEntities();
+            return base.SaveChanges();
+        }
+
+        public override int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            SetTenantIdOnEntities();
+            return base.SaveChanges(acceptAllChangesOnSuccess);
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            SetTenantIdOnEntities();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            SetTenantIdOnEntities();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        private void SetTenantIdOnEntities()
+        {
+            var currentTenantId = GetCurrentTenantId();
+            if (string.IsNullOrEmpty(currentTenantId))
+                return;
+
+            var entities = ChangeTracker.Entries()
+                .Where(e => e.State == EntityState.Added && e.Entity is ITenantEntity)
+                .Select(e => e.Entity as ITenantEntity);
+
+            foreach (var entity in entities)
+            {
+                if (entity != null && string.IsNullOrEmpty(entity.TenantId))
+                {
+                    entity.TenantId = currentTenantId;
+                }
+            }
+        }
+
+        private string? GetCurrentTenantId()
+        {
+            if (_tenantResolver != null)
+            {
+                return _tenantResolver.GetCurrentTenantId();
+            }
+
+            // Fallback to default tenant if resolver is not available
+            return "default";
         }
     }
 } 
