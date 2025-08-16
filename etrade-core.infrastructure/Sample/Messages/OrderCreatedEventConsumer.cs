@@ -1,9 +1,7 @@
 // Sample.Messages/OrderCreatedEventConsumer.cs
-using System.Threading;
-using System.Threading.Tasks;
-using Messaging;
+using etrade_core.infrastructure.CustomMessageQueue.ConsumerBases;
 
-namespace Sample.Messages
+namespace etrade_core.infrastructure.Sample.Messages
 {
     // PublishToAll & SchedulePublish -> yalnızca event consumer’ları alır
     public sealed class OrderCreatedEventConsumer : EventConsumerBase<OrderCreatedMessageRequest>

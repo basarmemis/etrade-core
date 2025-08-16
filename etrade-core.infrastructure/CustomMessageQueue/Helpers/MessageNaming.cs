@@ -1,10 +1,10 @@
-// Messaging.Naming.cs
-using System;
 using System.Text.RegularExpressions;
+using etrade_core.infrastructure.CustomMessageQueue.Attributes;
+using etrade_core.infrastructure.CustomMessageQueue.Enums;
 
-namespace Messaging
+namespace etrade_core.infrastructure.CustomMessageQueue.Helpers
 {
-    internal static class Naming
+    public static class MessageNaming
     {
         // "OrderCreatedMessageRequest" -> "order-created-message-request"
         public static string ClassKebab(Type t)
@@ -17,7 +17,7 @@ namespace Messaging
         // [prefix.]<class-kebab>.<suffix>
         public static string QueueName(Type messageType, MessagePattern pattern)
         {
-            var attr = (MessageNameAttribute?)Attribute.GetCustomAttribute(messageType, typeof(MessageNameAttribute));
+            var attr = (MessageNamePrefixAttribute?)Attribute.GetCustomAttribute(messageType, typeof(MessageNamePrefixAttribute));
             var prefix = string.IsNullOrWhiteSpace(attr?.Prefix) ? null : attr!.Prefix!.Trim();
             var baseName = ClassKebab(messageType);
             var head = string.IsNullOrWhiteSpace(prefix) ? baseName : $"{prefix}.{baseName}";

@@ -5,9 +5,9 @@ namespace etrade_core.infrastructure.CustomMessageQueue.Attributes
     /// Boş olabilir; boş ise sadece sınıf ismi baz alınır.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-    public sealed class MessageNameAttribute : Attribute
+    public sealed class MessageNamePrefixAttribute : Attribute
     {
         public string? Prefix { get; }
-        public MessageNameAttribute(string? prefix = null) => Prefix = prefix;
+        public MessageNamePrefixAttribute(string? prefix = null) => Prefix = prefix;
     }
 }

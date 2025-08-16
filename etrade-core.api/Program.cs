@@ -1,8 +1,6 @@
-using etrade_core.application.IRepositories;
 using etrade_core.infrastructure.Identity;
 using etrade_core.persistence.Context;
 using etrade_core.persistence.Identity;
-using etrade_core.persistence.Repositories;
 using etrade_core.persistence.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +9,11 @@ using etrade_core.application.Common.Behaviors;
 
 using FluentValidation;
 using etrade_core.application.OrderModule.Commands.CreateOrder;
-using etrade_core.application.OrderModule.Queries.GetOrder;
-using Sample.Messages;
 using System.Reflection;
-using Messaging;
+using etrade_core.infrastructure.CustomMessageQueue.DIExtensions;
+using etrade_core.infrastructure.CustomMessageQueue.Options;
+using etrade_core.infrastructure.CustomMessageQueue.IServices;
+using etrade_core.infrastructure.CustomMessageQueue.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -110,7 +109,7 @@ builder.Services.AddRabbitMqMessaging(
         opt.IdempotencyWindow = TimeSpan.FromMinutes(10);
     });
 
-builder.Services.AddScoped<OrderCreatedMessageSender>();
+builder.Services.AddScoped<IMessageSenderService, MessageSenderService>();
 
 var app = builder.Build();
 

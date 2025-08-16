@@ -1,9 +1,13 @@
-// Messaging.Registration.cs
 using System.Reflection;
+using etrade_core.infrastructure.CustomMessageQueue.ConsumerBases;
+using etrade_core.infrastructure.CustomMessageQueue.Enums;
+using etrade_core.infrastructure.CustomMessageQueue.Helpers;
+using etrade_core.infrastructure.CustomMessageQueue.Idompotency;
+using etrade_core.infrastructure.CustomMessageQueue.Options;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Messaging
+namespace etrade_core.infrastructure.CustomMessageQueue.DIExtensions
 {
     public static class MessagingRegistration
     {
@@ -43,9 +47,9 @@ namespace Messaging
 
                 foreach (var rq in rqTypes)
                 {
-                    var rpcQueue = Naming.QueueName(rq, MessagePattern.SendAndWait);
+                    var rpcQueue = MessageNaming.QueueName(rq, MessagePattern.SendAndWait);
                     //x.AddRequestClient(rq, Naming.QueueUri(rpcQueue));
-                    x.AddRequestClient(rq, Naming.ExchangeUri(rpcQueue));
+                    x.AddRequestClient(rq, MessageNaming.ExchangeUri(rpcQueue));
                 }
 
                 // Scheduler (RabbitMQ Delayed Exchange varsa)
@@ -101,14 +105,14 @@ namespace Messaging
                     foreach (var t in cmdConsumers)
                     {
                         var msgType = t.BaseType!.GetGenericArguments()[0];
-                        var cmdQueue = Naming.QueueName(msgType, MessagePattern.SendAndForget);
+                        var cmdQueue = MessageNaming.QueueName(msgType, MessagePattern.SendAndForget);
                         cfg.ReceiveEndpoint(cmdQueue, e =>
                         {
                             ConfigureCommonEndpoint(e);
                             e.ConfigureConsumer(context, t);
                         });
 
-                        var pubQueue = Naming.QueueName(msgType, MessagePattern.PublishToQueue);
+                        var pubQueue = MessageNaming.QueueName(msgType, MessagePattern.PublishToQueue);
                         cfg.ReceiveEndpoint(pubQueue, e =>
                         {
                             ConfigureCommonEndpoint(e);
@@ -120,7 +124,7 @@ namespace Messaging
                     foreach (var t in rpcConsumers)
                     {
                         var rqType = t.BaseType!.GetGenericArguments()[0];
-                        var rpcQueue = Naming.QueueName(rqType, MessagePattern.SendAndWait);
+                        var rpcQueue = MessageNaming.QueueName(rqType, MessagePattern.SendAndWait);
                         cfg.ReceiveEndpoint(rpcQueue, e =>
                         {
                             ConfigureCommonEndpoint(e);
@@ -132,7 +136,7 @@ namespace Messaging
                     foreach (var t in evtConsumers)
                     {
                         var payloadType = t.BaseType!.GetGenericArguments()[0];
-                        var evtQueue = Naming.QueueName(payloadType, MessagePattern.PublishToAll);
+                        var evtQueue = MessageNaming.QueueName(payloadType, MessagePattern.PublishToAll);
                         cfg.ReceiveEndpoint(evtQueue, e =>
                         {
                             ConfigureCommonEndpoint(e);

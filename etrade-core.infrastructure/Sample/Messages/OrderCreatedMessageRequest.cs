@@ -1,13 +1,14 @@
 // Sample.Messages/OrderCreatedMessageRequest.cs
-using System;
-using Messaging;
+using etrade_core.infrastructure.CustomMessageQueue.Attributes;
+using etrade_core.infrastructure.CustomMessageQueue.Messages;
 
-namespace Sample.Messages
+namespace etrade_core.infrastructure.Sample.Messages
 {
-    [MessageName("sales")] // prefix opsiyonel: "sales.order-created-message-request.<suffix>"
-    public sealed record OrderCreatedMessageRequest(
-        Guid OrderId,
-        decimal TotalAmount,
-        string Currency
-    ) : RequestBase<OrderCreatedMessageResponse>;
+    [MessageNamePrefix(null)] // prefix opsiyonel: "sales.order-created-message-request.<suffix>"
+    public sealed class OrderCreatedMessageRequest : MessageRequestBase
+    {
+        public Guid OrderId { get; set; }
+        public decimal TotalAmount { get; set; }
+        public string Currency { get; set; } = "TRY";
+    }
 }

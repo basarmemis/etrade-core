@@ -1,12 +1,12 @@
 // Sample.Messages/OrderCreatedMessageResponse.cs
-using System;
-using Messaging;
+using etrade_core.infrastructure.CustomMessageQueue.Messages;
 
-namespace Sample.Messages
+namespace etrade_core.infrastructure.Sample.Messages
 {
-    public sealed record OrderCreatedMessageResponse(
-        Guid OrderId,
-        bool Accepted,
-        string? Reason = null
-    ) : ResponseBase;
+    public sealed class OrderCreatedMessageResponse : MessageResponseBase
+    {
+        public Guid OrderId { get; set; }
+        public bool Accepted { get; set; }
+        public string? Reason { get; set; }
+    }
 }

@@ -1,9 +1,7 @@
 // Sample.Messages/OrderCreatedCommandConsumer.cs
-using System.Threading;
-using System.Threading.Tasks;
-using Messaging;
+using etrade_core.infrastructure.CustomMessageQueue.ConsumerBases;
 
-namespace Sample.Messages
+namespace etrade_core.infrastructure.Sample.Messages
 {
     // SendAndForget & PublishToQueue
     public sealed class OrderCreatedCommandConsumer : CommandConsumerBase<OrderCreatedMessageRequest>

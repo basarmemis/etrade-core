@@ -1,7 +1,4 @@
-// Messaging.Options.cs
-using System;
-
-namespace Messaging
+namespace etrade_core.infrastructure.CustomMessageQueue.Options
 {
     public sealed class MessagingOptions
     {
@@ -30,7 +27,7 @@ namespace Messaging
         public bool ConfigureDeadLetter { get; set; } = true;
 
         // Scheduler
-        public bool UseDelayedMessageScheduler { get; set; } = true; // RabbitMQ Delayed Message Exchange plugin varsayımı
+        public bool UseDelayedMessageScheduler { get; set; } = false; // RabbitMQ Delayed Message Exchange plugin varsayımı
 
         // Queue features
         public bool UseQuorumQueues { get; set; } = false;
